@@ -336,7 +336,110 @@ class OrdersController extends Controller
         
 
         $methods =Attribute::where('type',11)->where('status','active')->where('parent_id',null)->orderBy('view','asc')->get();
-        return view(adminTheme().'orders.ordersManage',compact('order','methods')); 
+        return view(adminTheme().'orders.ordersManage',compact('order','methods'));
+    }
+
+    public function orderItemUpdate(Request $r,$itemId){
+        $item =OrderItem::find($itemId);
+        if(!$item){
+            Session()->flash('error','Order Item Not Found');
+            return redirect()->back();
+        }
+
+        $order =$item->order;
+        if(!$order){
+            Session()->flash('error','Order Not Found');
+            return redirect()->back();
+        }
+
+        if(!in_array($order->order_status,['pending','temp'])){
+            Session()->flash('error','Only Pending Orders Item Can Be Edited. Please Change The Order Status Back To Pending First!');
+            return redirect()->back();
+        }
+
+        $check = $r->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $product =$item->product;
+        $quantity =(int)$r->quantity;
+
+        if($product && $product->productAttibutesVariationGroup()->count() > 0){
+
+            $options =$r->option;
+            if(empty($options)){
+                Session()->flash('error','Please Select Product Variant!');
+                return redirect()->back();
+            }
+
+            $selectedIds =array_values($options);
+            $matchedVariant =null;
+            foreach($product->productVariationAttributeItems as $variant){
+                $itemIds =$variant->attributeVatiationItems->pluck('attribute_item_id')->toArray();
+                if(count($itemIds)==count($selectedIds) && empty(array_diff($selectedIds,$itemIds))){
+                    $matchedVariant =$variant;
+                    break;
+                }
+            }
+
+            if(!$matchedVariant){
+                Session()->flash('error','Selected Variant Combination Is Not Available For This Product!');
+                return redirect()->back();
+            }
+
+            if($matchedVariant->stock_status && $quantity > $matchedVariant->quantity){
+                Session()->flash('error','Selected Variant Does Not Have Enough Stock. Available: '.$matchedVariant->quantity);
+                return redirect()->back();
+            }
+
+            $skuValue =[];
+            foreach($options as $attributeId=>$attributeItemId){
+                $group =Attribute::find($attributeId);
+                $value =Attribute::find($attributeItemId);
+                if($group && $value){
+                    $skuValue[$group->name] =$value->name;
+                }
+            }
+
+            $item->sku_id =json_encode($options);
+            $item->sku_value =json_encode($skuValue, JSON_UNESCAPED_UNICODE);
+            $item->price =$matchedVariant->offerPrice();
+
+        }else{
+            if($product && $product->stockStatus() && $quantity > $product->quantity){
+                Session()->flash('error','Not Enough Stock. Available: '.$product->quantity);
+                return redirect()->back();
+            }
+            if($product){
+                $item->price =$product->offerPrice();
+            }
+        }
+
+        $item->quantity =$quantity;
+        $item->total_price =($item->price * $item->quantity) + ($item->quantity * $item->warranty_charge);
+        $item->final_price =$item->total_price - $item->total_coupon_discount - $item->total_deal_discount;
+        $item->save();
+
+        $order->total_price =$order->items->sum('final_price');
+        $order->grand_total =$order->total_price + $order->shipping_charge + $order->getway_charge + $order->tax - $order->coupon_discount;
+        if($order->grand_total >= $order->paid_amount){
+            $order->due_amount =$order->grand_total - $order->paid_amount;
+            $order->extra_amount =0;
+        }else{
+            $order->due_amount =0;
+            $order->extra_amount =$order->paid_amount - $order->grand_total;
+        }
+        if($order->due_amount==0){
+            $order->payment_status ='paid';
+        }elseif($order->due_amount==$order->grand_total){
+            $order->payment_status ='unpaid';
+        }else{
+            $order->payment_status ='partial';
+        }
+        $order->save();
+
+        Session()->flash('success','Order Item Updated Successfully!');
+        return redirect()->back();
     }
 
     public function invoice($id){

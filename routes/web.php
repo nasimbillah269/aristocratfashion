@@ -186,6 +186,7 @@ Route::get('/orders/manage/{id}',[OrdersController::class,'ordersManage'])->name
 Route::post('/orders/update/{id}',[OrdersController::class,'ordersManageUpdate'])->name('ordersManageUpdate');
 Route::post('/orders/payments/{id}',[OrdersController::class,'ordersPaymentsUpdate'])->name('ordersPaymentsUpdate');
 Route::post('/orders/return/{id}',[OrdersController::class,'ordersReturnUpdate'])->name('ordersReturnUpdate');
+Route::post('/orders/item/update/{itemId}',[OrdersController::class,'orderItemUpdate'])->name('orderItemUpdate');
 // Order Management Route End
 
 // Accounts History Start

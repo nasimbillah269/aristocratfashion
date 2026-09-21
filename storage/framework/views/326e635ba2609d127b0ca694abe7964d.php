@@ -1,8 +1,8 @@
-@extends('admin.layouts.app') @section('title')
-<title>{{websiteTitle('Order Manage')}}</title>
-@endsection @push('css')
+ <?php $__env->startSection('title'); ?>
+<title><?php echo e(websiteTitle('Order Manage')); ?></title>
+<?php $__env->stopSection(); ?> <?php $__env->startPush('css'); ?>
 <style type="text/css"></style>
-@endpush @section('contents')
+<?php $__env->stopPush(); ?> <?php $__env->startSection('contents'); ?>
 
 
 <div class="content-header row">
@@ -11,7 +11,7 @@
         <div class="row breadcrumbs-top">
             <div class="breadcrumb-wrapper col-12">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard </a></li>
+                    <li class="breadcrumb-item"><a href="<?php echo e(route('admin.dashboard')); ?>">Dashboard </a></li>
                     <li class="breadcrumb-item active">Order Manage</li>
                 </ol>
             </div>
@@ -19,11 +19,11 @@
     </div>
     <div class="content-header-right col-md-6 col-12 mb-md-0 mb-2">
         <div class="btn-group float-md-right" role="group" aria-label="Button group with nested dropdown">
-            <a class="btn btn-outline-primary" href="{{route('admin.orders')}}"><i class="fa fa-list"></i> Back</a>
+            <a class="btn btn-outline-primary" href="<?php echo e(route('admin.orders')); ?>"><i class="fa fa-list"></i> Back</a>
             
-            <a class="btn btn-success" href="{{route('admin.invoice',$order->id)}}"><i class="fa fa-print"></i> Invoice</a>
+            <a class="btn btn-success" href="<?php echo e(route('admin.invoice',$order->id)); ?>"><i class="fa fa-print"></i> Invoice</a>
             
-            <a class="btn btn-outline-primary" href="{{route('admin.ordersManage',$order->id)}}">
+            <a class="btn btn-outline-primary" href="<?php echo e(route('admin.ordersManage',$order->id)); ?>">
                 <i class="fa-solid fa-rotate"></i>
             </a>
         </div>
@@ -36,7 +36,7 @@
     <section class="basic-elements">
         <div class="row">
             <div class="col-md-12">
-			@include('admin.alerts')
+			<?php echo $__env->make('admin.alerts', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
             	<div class="card">
                     <div class="card-header" style="border-bottom: 1px solid #e3ebf3;">
                         <h4 class="card-title">Customer Info</h4>
@@ -49,24 +49,24 @@
                         			<table class="table table-borderless">
                         			    <tr>
 		                        			<th>INVOICE:</th>
-		                        			<td>{{$order->invoice}}</td>
+		                        			<td><?php echo e($order->invoice); ?></td>
 		                        		</tr>
 		                        		
 		                        		<tr>
 		                        			<th>Name:</th>
-		                        			<td>{{$order->name}}</td>
+		                        			<td><?php echo e($order->name); ?></td>
 		                        		</tr>
 		                        		<tr>
 		                        			<th>Mobile:</th>
-		                        			<td>{{$order->mobile}}</td>
+		                        			<td><?php echo e($order->mobile); ?></td>
 		                        		</tr>
 		                        		<tr>
 		                        			<th>Email:</th>
-		                        			<td>{{$order->email}}</td>
+		                        			<td><?php echo e($order->email); ?></td>
 		                        		</tr>
 		                        		<tr>
 		                        			<th>Billing:</th>
-		                        			<td>{{$order->fullAddress()}}</td>
+		                        			<td><?php echo e($order->fullAddress()); ?></td>
 		                        		</tr>
 										<tr>
 		                        			<th>Shipping:</th>
@@ -74,7 +74,7 @@
 		                        		</tr>
 		                        		<tr>
 		                        			<th>Note:</th>
-		                        			<td>{!!$order->note!!}</td>
+		                        			<td><?php echo $order->note; ?></td>
 		                        		</tr>
 		                        	</table>
 		                        	</div>
@@ -84,69 +84,71 @@
                         			<table class="table table-borderless">
 		                        		<tr>
 		                        			<th>Grand Total:</th>
-		                        			<td>{{priceFullFormat($order->grand_total)}}
-											@if($order->return_amount>0)
-		                        			<span class="badge badge-success" style="background:#ff9800;">Refund</span> {{priceFullFormat($order->return_amount)}}
-		                        			@endif
+		                        			<td><?php echo e(priceFullFormat($order->grand_total)); ?>
+
+											<?php if($order->return_amount>0): ?>
+		                        			<span class="badge badge-success" style="background:#ff9800;">Refund</span> <?php echo e(priceFullFormat($order->return_amount)); ?>
+
+		                        			<?php endif; ?>
 											</td>
 		                        		</tr>
 		                        		<tr>
 		                        			<th>Paid:</th>
-		                        			<td>{{priceFullFormat($order->paid_amount)}}</td>
+		                        			<td><?php echo e(priceFullFormat($order->paid_amount)); ?></td>
 		                        		</tr>
 		                        		<tr>
 		                        			<th>Due:</th>
-		                        			<td>{{priceFullFormat($order->due_amount)}}</td>
+		                        			<td><?php echo e(priceFullFormat($order->due_amount)); ?></td>
 		                        		</tr>
-		                        		@if($order->extra_amount)
+		                        		<?php if($order->extra_amount): ?>
 		                        		<tr>
 		                        			<th>Advence:</th>
-		                        			<td>{{priceFullFormat($order->extra_amount)}} 
+		                        			<td><?php echo e(priceFullFormat($order->extra_amount)); ?> 
 		                        			
 		                        			</td>
 		                        		</tr>
-		                        		@endif
+		                        		<?php endif; ?>
 		                        		
 		                        		<tr>
 		                        			<th>Payment:</th>
 		                        			<td>
-		                        			    @if($order->payment_status=='partial')
-								                <span class="badge badge-success" style="background:#ff9800;">{{ucfirst($order->payment_status)}}</span>
-								                @elseif($order->payment_status=='paid')
-								                <span class="badge badge-success" style="background:#673ab7;">{{ucfirst($order->payment_status)}}</span>
-								                @else
-								                <span class="badge badge-success" style="background:#f44336;">{{ucfirst($order->payment_status)}}</span>
-								                @endif
+		                        			    <?php if($order->payment_status=='partial'): ?>
+								                <span class="badge badge-success" style="background:#ff9800;"><?php echo e(ucfirst($order->payment_status)); ?></span>
+								                <?php elseif($order->payment_status=='paid'): ?>
+								                <span class="badge badge-success" style="background:#673ab7;"><?php echo e(ucfirst($order->payment_status)); ?></span>
+								                <?php else: ?>
+								                <span class="badge badge-success" style="background:#f44336;"><?php echo e(ucfirst($order->payment_status)); ?></span>
+								                <?php endif; ?>
 		                        			</td>
 		                        		</tr>
 		                        		<tr>
 		                        			<th>Order Status:</th>
 		                        			<td>
-		                        			    @if($order->payment_method==null)
+		                        			    <?php if($order->payment_method==null): ?>
 									            <span class="badge badge-success" style="background:#ff5722;">Pending Payment</span>
-									            @else
-									            @if($order->order_status=='confirmed')
-									            <span class="badge badge-success" style="background:#e91e63;">{{ucfirst($order->order_status)}}</span>
-									            @elseif($order->order_status=='shipped')
-									            <span class="badge badge-success" style="background:#673ab7;">{{ucfirst($order->order_status)}}</span>
-									            @elseif($order->order_status=='delivered')
-									            <span class="badge badge-success" style="background:#1c84c6;">{{ucfirst($order->order_status)}}</span>
-									            @elseif($order->order_status=='cancelled')
-									            <span class="badge badge-success" style="background:#f44336;">{{ucfirst($order->order_status)}}</span>
-									            @else
-									            <span class="badge badge-success" style="background:#ff9800;">{{ucfirst($order->order_status)}}</span>
-									            @endif
-									            @endif
+									            <?php else: ?>
+									            <?php if($order->order_status=='confirmed'): ?>
+									            <span class="badge badge-success" style="background:#e91e63;"><?php echo e(ucfirst($order->order_status)); ?></span>
+									            <?php elseif($order->order_status=='shipped'): ?>
+									            <span class="badge badge-success" style="background:#673ab7;"><?php echo e(ucfirst($order->order_status)); ?></span>
+									            <?php elseif($order->order_status=='delivered'): ?>
+									            <span class="badge badge-success" style="background:#1c84c6;"><?php echo e(ucfirst($order->order_status)); ?></span>
+									            <?php elseif($order->order_status=='cancelled'): ?>
+									            <span class="badge badge-success" style="background:#f44336;"><?php echo e(ucfirst($order->order_status)); ?></span>
+									            <?php else: ?>
+									            <span class="badge badge-success" style="background:#ff9800;"><?php echo e(ucfirst($order->order_status)); ?></span>
+									            <?php endif; ?>
+									            <?php endif; ?>
 		                        			    
 		                        			</td>
 		                        		</tr>
 		                        		<tr>
 		                        			<th>Date:</th>
-		                        			<td>{{$order->created_at->format('d-m-Y')}}</td>
+		                        			<td><?php echo e($order->created_at->format('d-m-Y')); ?></td>
 		                        		</tr>
 		                        		<tr>
 		                        			<th>Total Items:</th>
-		                        			<td> {{$order->items->count()}} Items</td>
+		                        			<td> <?php echo e($order->items->count()); ?> Items</td>
 		                        		</tr>
 		                        	</table>
 		                        	</div>
@@ -162,8 +164,8 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                        	<form class="form-inline" method="post" action="{{route('admin.ordersAction',['update',$order->id])}}">
-					                @csrf
+                        	<form class="form-inline" method="post" action="<?php echo e(route('admin.ordersAction',['update',$order->id])); ?>">
+					                <?php echo csrf_field(); ?>
 					                <div class="table-responsive m-t">
 					                    <table class="table table-sm table-bordered table-striped">
 					                        <thead>
@@ -177,76 +179,80 @@
 					                        </thead>
 					                        <tbody>
 
-					                            @foreach($order->items as $i=>$item)
+					                            <?php $__currentLoopData = $order->items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $i=>$item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 					                            <tr>
-					                                <td style="padding: 8px 10px;">{{ $i+1 }}</td>
+					                                <td style="padding: 8px 10px;"><?php echo e($i+1); ?></td>
 					                               
 					                                <td>
-					                                    <img src="{{asset($item->image())}}" style="max-height: 40px;max-width: 100%;">
+					                                    <img src="<?php echo e(asset($item->image())); ?>" style="max-height: 40px;max-width: 100%;">
 					                                </td>
 					                                
 					                                <td>
-					                                  <div><strong>{{ $item->product_name }}</strong></div>
+					                                  <div><strong><?php echo e($item->product_name); ?></strong></div>
 					                                  <small>
-					                                    ID:{{ $item->product_id }}
+					                                    ID:<?php echo e($item->product_id); ?>
+
 					                                    
-					                                    @if($item->itemAttributes())
+					                                    <?php if($item->itemAttributes()): ?>
                             							<br>
                             							<span style="font-size: 14px;">
-                                                            @foreach($item->itemAttributes() as $attributeName => $value)
-                                                                <b>{{ $attributeName }}</b>: {{ $value }}
-                                                                @if(!$loop->last)
+                                                            <?php $__currentLoopData = $item->itemAttributes(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attributeName => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                <b><?php echo e($attributeName); ?></b>: <?php echo e($value); ?>
+
+                                                                <?php if(!$loop->last): ?>
                                                                     , 
-                                                                @endif
-                                                            @endforeach
+                                                                <?php endif; ?>
+                                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                         </span>
-                            							@endif
-                            							@if($item->warranty_note)
+                            							<?php endif; ?>
+                            							<?php if($item->warranty_note): ?>
                             							<br>
-                            							 <small style="font-size: 12px;">{{$item->warranty_note}} -  <b>{{$item->warranty_charge > 0?priceFullFormat($item->warranty_charge):'Free'}}</b></small>
-                            							@endif
+                            							 <small style="font-size: 12px;"><?php echo e($item->warranty_note); ?> -  <b><?php echo e($item->warranty_charge > 0?priceFullFormat($item->warranty_charge):'Free'); ?></b></small>
+                            							<?php endif; ?>
 					                                    
 					                                    
-					                                    @if($item->sku_code)
-					                                    , SKU: {{ $item->sku_code }} 
-					                                    @endif
+					                                    <?php if($item->sku_code): ?>
+					                                    , SKU: <?php echo e($item->sku_code); ?> 
+					                                    <?php endif; ?>
 					                                    
-					                                    @if($item->weight_unit && $item->weight_amount)
-					                                    , Weight: {{ $item->weight_amount }} {{ $item->weight_unit }} 
-					                                    @endif
+					                                    <?php if($item->weight_unit && $item->weight_amount): ?>
+					                                    , Weight: <?php echo e($item->weight_amount); ?> <?php echo e($item->weight_unit); ?> 
+					                                    <?php endif; ?>
 					                                    
-					                                    @if($item->dimensions_unit && $item->dimensions_length || $item->dimensions_width  || $item->dimensions_height )
-					                                    , Dimensions($item->dimensions_unit): L-{{ $item->dimensions_length }} W-{{ $item->dimensions_width }} H-{{ $item->dimensions_height }}
-					                                    @endif
+					                                    <?php if($item->dimensions_unit && $item->dimensions_length || $item->dimensions_width  || $item->dimensions_height ): ?>
+					                                    , Dimensions($item->dimensions_unit): L-<?php echo e($item->dimensions_length); ?> W-<?php echo e($item->dimensions_width); ?> H-<?php echo e($item->dimensions_height); ?>
+
+					                                    <?php endif; ?>
 
 					                                    
 					                                    </small>
-					                                    @if($item->returnItems->count() > 0)
-					                                    @if($item->return_type)
+					                                    <?php if($item->returnItems->count() > 0): ?>
+					                                    <?php if($item->return_type): ?>
 					                                    <span class="badge badge-info" style="background: #ff9800;">Return</span>
-					                                    @else
+					                                    <?php else: ?>
 					                                    <span class="badge badge-primary" style="background: #ff5722;">Cancel</span>
-					                                    @endif
-					                                    @endif
-					                                    @if($item->pre_order)
+					                                    <?php endif; ?>
+					                                    <?php endif; ?>
+					                                    <?php if($item->pre_order): ?>
                             							<br>
                             							<span style="padding: 0px 10px;display: inline-block;border-radius: 5px;background: #d9d910;">Pre-Order</span>
-                            							@endif
-					                                    <span ><b>Available Stock:</b>{{$item->itemStock()}}</span>
-					                                    @if(in_array($order->order_status,['pending','temp']))
+                            							<?php endif; ?>
+					                                    <span ><b>Available Stock:</b><?php echo e($item->itemStock()); ?></span>
+					                                    <?php if(in_array($order->order_status,['pending','temp'])): ?>
 					                                    <br>
-					                                    <button type="button" class="btn btn-sm btn-outline-primary" style="padding:2px 8px;margin-top:5px;" data-toggle="modal" data-target="#editItem{{$item->id}}">
+					                                    <button type="button" class="btn btn-sm btn-outline-primary" style="padding:2px 8px;margin-top:5px;" data-toggle="modal" data-target="#editItem<?php echo e($item->id); ?>">
 					                                        <i class="fa fa-edit"></i> Edit Item
 					                                    </button>
-					                                    @endif
+					                                    <?php endif; ?>
 					                                </td>
-					                                <td>{{ $item->quantity }} X {{priceFormat($item->price)}}</td>
+					                                <td><?php echo e($item->quantity); ?> X <?php echo e(priceFormat($item->price)); ?></td>
 					                                 <td>
-					                                  {{ priceFullFormat($item->total_price) }}
+					                                  <?php echo e(priceFullFormat($item->total_price)); ?>
+
 					                                </td>
 					                        </tr>
 					                       
-					                        @endforeach
+					                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
 
 					                    </tbody>
@@ -259,20 +265,20 @@
 					                            <div class="input-group input-group-sm">
 
 					                              <select class="form-control" name="order_status" id="order_status" style="width: 250px;border: 2px solid #009688;height: 35px;">
-												  	<option	option {{ $order->order_status == 'pending' ? 'selected' : '' }} value="pending">Pending</option>
-					                                <option {{ $order->order_status == 'confirmed' ? 'selected' : '' }} value="confirmed">Confirmed</option>
-					                                <option {{ $order->order_status == 'shipped' ? 'selected' : '' }} value="shipped">Shipped</option>
-					                                <option {{ $order->order_status == 'delivered' ? 'selected' : '' }} value="delivered">Delivered</option>
-					                                <option {{ $order->order_status == 'cancelled' ? 'selected' : '' }} value="cancelled">Cancelled</option>   
+												  	<option	option <?php echo e($order->order_status == 'pending' ? 'selected' : ''); ?> value="pending">Pending</option>
+					                                <option <?php echo e($order->order_status == 'confirmed' ? 'selected' : ''); ?> value="confirmed">Confirmed</option>
+					                                <option <?php echo e($order->order_status == 'shipped' ? 'selected' : ''); ?> value="shipped">Shipped</option>
+					                                <option <?php echo e($order->order_status == 'delivered' ? 'selected' : ''); ?> value="delivered">Delivered</option>
+					                                <option <?php echo e($order->order_status == 'cancelled' ? 'selected' : ''); ?> value="cancelled">Cancelled</option>   
 					                            </select>
 					                        </div>
 					                         <div class="input-group input-group-sm" style="width: 250px;margin:5px 0;">
-											<!--@if(general()->sms_status)-->
+											<!--<?php if(general()->sms_status): ?>-->
 					      <!--                      <label style="cursor: pointer;padding: 0 5px;"><input type="checkbox" name="mail_sms"> Send SMS</label>-->
-					      <!--                  @endif-->
-											<!--@if(general()->mail_status)-->
+					      <!--                  <?php endif; ?>-->
+											<!--<?php if(general()->mail_status): ?>-->
 											<!--	<label style="cursor: pointer;padding: 0 5px;"><input type="checkbox" name="mail_send"> Send Mail</label>-->
-					      <!--              	@endif-->
+					      <!--              	<?php endif; ?>-->
 											</div>
 					                        <div class="form-group">
 					                            <button class="btn btn-success" type="submit" style="width: 100%;background-color: #e91e63 !important;border-color: #e91e63;">
@@ -288,39 +294,40 @@
 					</div><!-- /table-responsive -->
 					</form>
 
-					@if(in_array($order->order_status,['pending','temp']))
-					@foreach($order->items as $item)
-					<div class="modal fade" id="editItem{{$item->id}}" tabindex="-1" role="dialog" aria-hidden="true">
+					<?php if(in_array($order->order_status,['pending','temp'])): ?>
+					<?php $__currentLoopData = $order->items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+					<div class="modal fade" id="editItem<?php echo e($item->id); ?>" tabindex="-1" role="dialog" aria-hidden="true">
 					    <div class="modal-dialog" role="document">
 					        <div class="modal-content">
-					            <form method="post" action="{{route('admin.orderItemUpdate',$item->id)}}">
-					                @csrf
+					            <form method="post" action="<?php echo e(route('admin.orderItemUpdate',$item->id)); ?>">
+					                <?php echo csrf_field(); ?>
 					                <div class="modal-header">
-					                    <h5 class="modal-title">Edit Item: {{$item->product_name}}</h5>
+					                    <h5 class="modal-title">Edit Item: <?php echo e($item->product_name); ?></h5>
 					                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					                        <span aria-hidden="true">&times;</span>
 					                    </button>
 					                </div>
 					                <div class="modal-body">
-					                    @if($item->product && $item->product->productAttibutesVariationGroup()->count() > 0)
-					                    @php $currentSku = json_decode($item->sku_id, true) ?: []; @endphp
-					                    @foreach($item->product->productAttibutesVariationGroup() as $attri)
+					                    <?php if($item->product && $item->product->productAttibutesVariationGroup()->count() > 0): ?>
+					                    <?php $currentSku = json_decode($item->sku_id, true) ?: []; ?>
+					                    <?php $__currentLoopData = $item->product->productAttibutesVariationGroup(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attri): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 					                    <div class="form-group">
-					                        <label>{{$attri->name}}</label>
-					                        <select class="form-control" name="option[{{$attri->id}}]" required>
-					                            <option value="">Select {{$attri->name}}</option>
-					                            @foreach($item->product->productVariationAttributeItemsList()->whereHas('attributeItem')->where('attribute_id',$attri->id)->select('attribute_item_id')->groupBy('attribute_item_id')->get() as $sku)
-					                            <option value="{{$sku->attribute_item_id}}" @if(isset($currentSku[$attri->id]) && $currentSku[$attri->id]==$sku->attribute_item_id) selected @endif>
-					                                {{$sku->attributeItem->name}}
+					                        <label><?php echo e($attri->name); ?></label>
+					                        <select class="form-control" name="option[<?php echo e($attri->id); ?>]" required>
+					                            <option value="">Select <?php echo e($attri->name); ?></option>
+					                            <?php $__currentLoopData = $item->product->productVariationAttributeItemsList()->whereHas('attributeItem')->where('attribute_id',$attri->id)->select('attribute_item_id')->groupBy('attribute_item_id')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sku): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+					                            <option value="<?php echo e($sku->attribute_item_id); ?>" <?php if(isset($currentSku[$attri->id]) && $currentSku[$attri->id]==$sku->attribute_item_id): ?> selected <?php endif; ?>>
+					                                <?php echo e($sku->attributeItem->name); ?>
+
 					                            </option>
-					                            @endforeach
+					                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 					                        </select>
 					                    </div>
-					                    @endforeach
-					                    @endif
+					                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+					                    <?php endif; ?>
 					                    <div class="form-group">
 					                        <label>Quantity</label>
-					                        <input type="number" class="form-control" name="quantity" min="1" value="{{$item->quantity}}" required>
+					                        <input type="number" class="form-control" name="quantity" min="1" value="<?php echo e($item->quantity); ?>" required>
 					                    </div>
 					                </div>
 					                <div class="modal-footer">
@@ -331,8 +338,8 @@
 					        </div>
 					    </div>
 					</div>
-					@endforeach
-					@endif
+					<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+					<?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -361,45 +368,49 @@
                                     <th style="min-width:300px;">Note</th>
                                     <th style="min-width:150px;">Amount</th>
                                 </tr>
-                               @foreach($order->transactionsAll as $i=>$transaction)
+                               <?php $__currentLoopData = $order->transactionsAll; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $i=>$transaction): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                <tr>
                                 <td>
-                                    <b>TNX:</b> {{$transaction->transection_id}}<br>
-                                    <b>Method:</b> {{$transaction->method?$transaction->method->name:''}}<br>
+                                    <b>TNX:</b> <?php echo e($transaction->transection_id); ?><br>
+                                    <b>Method:</b> <?php echo e($transaction->method?$transaction->method->name:''); ?><br>
                                     
-                                    <b>Date:</b> {{$transaction->created_at->format('Y-m-d h:i A')}}
+                                    <b>Date:</b> <?php echo e($transaction->created_at->format('Y-m-d h:i A')); ?>
+
                                 </td>
                                 <td>
-                                    <b>Name:</b> {{$transaction->billing_name}} <br>
-                                    <b>Mobile:</b> {{$transaction->billing_mobile}} <br>
-                                    <b>E-mail:</b> {{$transaction->billing_email}} <br>
+                                    <b>Name:</b> <?php echo e($transaction->billing_name); ?> <br>
+                                    <b>Mobile:</b> <?php echo e($transaction->billing_mobile); ?> <br>
+                                    <b>E-mail:</b> <?php echo e($transaction->billing_email); ?> <br>
                                 </td>
                                 <td>
-                                    <b>Type: </b>@if($transaction->type==1)
+                                    <b>Type: </b><?php if($transaction->type==1): ?>
                                     <span class="badge badge-success" style="background:#00bcd4;">Recharge</span>
-                                    @elseif($transaction->type==2)
+                                    <?php elseif($transaction->type==2): ?>
                                     <span class="badge badge-success" style="background:#ff9800;">Re-fund Order</span>
-                                    @else
+                                    <?php else: ?>
                                     <span class="badge badge-success" style="background:#8bc34a;">Order Payment</span>
-                                    @endif <br>
-                                    <b>Address:</b> {{$transaction->billing_address}}<br>
-                                    <b>Note:</b> {{$transaction->billing_note}}
+                                    <?php endif; ?> <br>
+                                    <b>Address:</b> <?php echo e($transaction->billing_address); ?><br>
+                                    <b>Note:</b> <?php echo e($transaction->billing_note); ?>
+
                                 </td>
-                                <td>{{$transaction->currency}} {{number_format($transaction->amount,2)}}
+                                <td><?php echo e($transaction->currency); ?> <?php echo e(number_format($transaction->amount,2)); ?>
+
                                     <br>
-                                    <b>Status:</b> {{ucfirst($transaction->status)}}
+                                    <b>Status:</b> <?php echo e(ucfirst($transaction->status)); ?>
+
                                     <br>
-                                    <a href="{{route('admin.ordersAction',['payment-delete',$order->id,'transection_id'=>$transaction->id])}}" class="btn btn-danger btn-sm" onclick="return confirm('Are You Want To Delete?')">Delete</a>
+                                    <a href="<?php echo e(route('admin.ordersAction',['payment-delete',$order->id,'transection_id'=>$transaction->id])); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are You Want To Delete?')">Delete</a>
                                 </td>
                                </tr>
-                               @endforeach
-                               @if($order->transactionsAll->count()==0)
+                               <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                               <?php if($order->transactionsAll->count()==0): ?>
                                <tr>
                                    <td colspan="4" style="text-align:center;">
                                            <span>No Transaction</span>
                                    </td>
                                </tr>
-                               @endif
+                               <?php endif; ?>
                             </table>
                         </div>
                     </div>
@@ -433,21 +444,21 @@
 			</ul>
 			<div class="tab-content px-1 pt-1" style="border: 1px solid #ddd;">
 				<div class="tab-pane active" id="tab1" role="tabpanel" aria-labelledby="base-tab1">
-				<form action="{{route('admin.ordersAction',['payment',$order->id])}}" method="post">
-					@csrf
+				<form action="<?php echo e(route('admin.ordersAction',['payment',$order->id])); ?>" method="post">
+					<?php echo csrf_field(); ?>
 					<input type="hidden" value="0" name="transaction_type">
 					<div class="form-group">
 						<label>Amount</label>
-						<input type="number" class="form-control PayAmount" step="any" name="amount" placeholder="Enter Amount" value="{{$order->due_amount?:''}}">
+						<input type="number" class="form-control PayAmount" step="any" name="amount" placeholder="Enter Amount" value="<?php echo e($order->due_amount?:''); ?>">
 					</div>
 					<div class="form-group">
 						<label>Method</label>
 						<div class="input-group">
 						<select class="form-control" name="method" required="">
 							<option value="">Select Method</option>
-						@foreach($methods as $method)
-							<option value="{{$method->id}}" >{{$method->name}}</option>
-							@endforeach
+						<?php $__currentLoopData = $methods; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $method): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+							<option value="<?php echo e($method->id); ?>" ><?php echo e($method->name); ?></option>
+							<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 						</select>
 						</div>
 					</div>
@@ -456,12 +467,12 @@
 						<textarea name="note" class="form-control" placeholder="Write Note.."></textarea>
 					</div>
 					<div class="input-group input-group-sm" style="width: 250px;margin:5px 0;">
-					@if(general()->sms_status)
+					<?php if(general()->sms_status): ?>
 						<label style="cursor: pointer;padding: 0 5px;"><input type="checkbox" name="mail_sms"> Send SMS</label>
-					@endif
-					@if(general()->mail_status)
+					<?php endif; ?>
+					<?php if(general()->mail_status): ?>
 						<label style="cursor: pointer;padding: 0 5px;"><input type="checkbox" name="mail_send"> Send Mail</label>
-					@endif
+					<?php endif; ?>
 					</div>
 					<button type="submit" class="btn btn-primary">Submit</button>
 					<br>
@@ -469,21 +480,21 @@
 				</div>
 				
 				<!--<div class="tab-pane" id="tab2" role="tabpanel" aria-labelledby="base-tab2">-->
-				<!--	<form action="{{route('admin.ordersAction',['payment',$order->id])}}" method="post">-->
-				<!--		@csrf-->
+				<!--	<form action="<?php echo e(route('admin.ordersAction',['payment',$order->id])); ?>" method="post">-->
+				<!--		<?php echo csrf_field(); ?>-->
 				<!--		<input type="hidden" value="1" name="transaction_type">-->
 				<!--		<div class="form-group">-->
 				<!--			<label>Amount</label>-->
-				<!--			<input type="number" class="form-control PayAmount" name="amount" placeholder="Enter Amount" value="{{$order->paid_amount}}">-->
+				<!--			<input type="number" class="form-control PayAmount" name="amount" placeholder="Enter Amount" value="<?php echo e($order->paid_amount); ?>">-->
 				<!--		</div>-->
 				<!--		<div class="form-group">-->
 				<!--			<label>Method</label>-->
 				<!--			<div class="input-group">-->
 				<!--			<select class="form-control" name="method" required="">-->
 				<!--				<option value="">Select Method</option>-->
-				<!--			@foreach($methods as $method)-->
-				<!--				<option value="{{$method->id}}">{{$method->name}}</option>-->
-				<!--			@endforeach-->
+				<!--			<?php $__currentLoopData = $methods; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $method): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>-->
+				<!--				<option value="<?php echo e($method->id); ?>"><?php echo e($method->name); ?></option>-->
+				<!--			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>-->
 				<!--			</select>-->
 				<!--			</div>-->
 				<!--		</div>-->
@@ -492,12 +503,12 @@
 				<!--			<textarea name="note" class="form-control" placeholder="Write Note.."></textarea>-->
 				<!--		</div>-->
 				<!--		<div class="input-group input-group-sm" style="width: 250px;margin:5px 0;">-->
-				<!--			@if(general()->sms_status)-->
+				<!--			<?php if(general()->sms_status): ?>-->
 				<!--				<label style="cursor: pointer;padding: 0 5px;"><input type="checkbox" name="mail_sms"> Send SMS</label>-->
-				<!--			@endif-->
-				<!--			@if(general()->mail_status)-->
+				<!--			<?php endif; ?>-->
+				<!--			<?php if(general()->mail_status): ?>-->
 				<!--				<label style="cursor: pointer;padding: 0 5px;"><input type="checkbox" name="mail_send"> Send Mail</label>-->
-				<!--			@endif-->
+				<!--			<?php endif; ?>-->
 				<!--		</div>-->
 				<!--		<button type="submit" class="btn btn-primary">Submit</button>-->
 				<!--		<br>-->
@@ -510,9 +521,9 @@
    </div>
  </div>
 
-@endsection 
+<?php $__env->stopSection(); ?> 
 
-@push('js')
+<?php $__env->startPush('js'); ?>
 
 <script>
     $(document).ready(function(){
@@ -530,4 +541,5 @@
     });
 </script>
 
-@endpush
+<?php $__env->stopPush(); ?>
+<?php echo $__env->make('admin.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp\htdocs\aristocratfashion\resources\views/admin/orders/ordersManage.blade.php ENDPATH**/ ?>
