@@ -74,7 +74,13 @@
 		                        		</tr>
 		                        		<tr>
 		                        			<th>Note:</th>
-		                        			<td><?php echo $order->note; ?></td>
+		                        			<td>
+		                        			    <?php echo $order->note; ?>
+
+		                        			    <button type="button" class="btn btn-sm btn-outline-primary" style="padding:2px 8px;" data-toggle="modal" data-target="#editNote">
+		                        			        <i class="fa fa-edit"></i> Edit
+		                        			    </button>
+		                        			</td>
 		                        		</tr>
 		                        	</table>
 		                        	</div>
@@ -423,6 +429,33 @@
 </div>
 
 
+
+ <!-- Edit Note Modal -->
+ <div class="modal fade" id="editNote" tabindex="-1" role="dialog" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+     <div class="modal-content">
+       <form method="post" action="<?php echo e(route('admin.ordersAction',['note-update',$order->id])); ?>">
+         <?php echo csrf_field(); ?>
+         <div class="modal-header">
+           <h5 class="modal-title">Edit Order Note</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+           </button>
+         </div>
+         <div class="modal-body">
+           <div class="form-group">
+             <label>Note</label>
+             <textarea class="form-control" name="note" rows="5" placeholder="Write Note.."><?php echo e($order->note); ?></textarea>
+           </div>
+         </div>
+         <div class="modal-footer">
+           <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+           <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Update Note</button>
+         </div>
+       </form>
+     </div>
+   </div>
+ </div>
  <!-- Modal -->
  <div class="modal fade text-left" id="payment">
    <div class="modal-dialog" role="document">

@@ -235,8 +235,18 @@ class OrdersController extends Controller
 
         }
 
+        if($action=='note-update'){
+            $check = $r->validate([
+                'note' => 'nullable|string|max:1000',
+            ]);
+            $order->note=$r->note;
+            $order->save();
+            Session()->flash('success','Order Note Updated Successfully!');
+            return redirect()->back();
+        }
+
         if($action=='payment'){
-       
+
             $check = $r->validate([
                 'amount' => 'required|numeric',
                 'method' => 'required|numeric',
