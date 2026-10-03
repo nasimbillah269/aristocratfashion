@@ -1,7 +1,7 @@
 <?php $__currentLoopData = $product->productAttibutesVariationGroup(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ii=>$attri): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
     <div class="row" style="margin:0 -10px;">
         <div class="col-md-2" style="padding:10px;">
-            <h5 style="margin-bottom: 5px;font-weight: bold; font-size: 15px;"><?php echo e($attri->name); ?> :  <span class="selected-value text-success"></span></h5>
+            <h5 style="margin-bottom: 5px;font-weight: bold; font-size: 14px;"><?php echo e($attri->name); ?> :  <span class="selected-value text-success"></span></h5>
         </div>
         <div class="col-md-10" style="padding:0 5px;">
             <ul class="colorList attributeItem">
