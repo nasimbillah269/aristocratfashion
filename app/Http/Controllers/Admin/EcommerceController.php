@@ -563,10 +563,10 @@ class EcommerceController extends Controller
             
             if($column=='attributesVariationItemAddIds'){
                 if (!empty($r->attriID)) {
-                    $product->productVariationAttibutes()->whereNotIn('parent_id', $r->attriID)->delete();
-                    
+                    $product->productVariationAttibutes()->whereNotIn('reff_id', $r->attriID)->delete();
+
                     for ($i = 0; $i < count($r->attriID); $i++) {
-                        $data = $product->productVariationAttibutes()->where('parent_id', $r->attriID[$i])->first();
+                        $data = $product->productVariationAttibutes()->where('reff_id', $r->attriID[$i])->first();
                         if (!$data) {
                             $data = new PostAttribute();
                             $data->src_id = $product->id;           // Product ID
