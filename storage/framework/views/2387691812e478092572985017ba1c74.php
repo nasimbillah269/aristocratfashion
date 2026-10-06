@@ -6,7 +6,7 @@
   .af-footer a { color:#bdbdbd; text-decoration:none; transition:color .2s; }
   .af-footer a:hover { color:#c9a24a; }
 
-  .af-footer-main { padding:3.5rem 0 2rem; }
+  .af-footer-main { padding-top:3.5rem; padding-bottom:2rem; }
 
   .af-brand img { max-width:100px; margin-bottom:.9rem; }
   .af-tagline { font-size:.7rem; letter-spacing:2.5px; color:#c9a24a; text-transform:uppercase; margin-bottom:.6rem; }
@@ -39,7 +39,7 @@
   .af-info-item .af-wa { display:flex; align-items:center; gap:.4rem; margin-top:.2rem; }
   .af-info-item .af-wa i { color:#25d366; font-size:1rem; }
 
-  .af-footer-bottom { border-top:1px solid #1a1a1a; padding:1.1rem 0; font-size:.8rem; color:#8a8a8a; }
+  .af-footer-bottom { border-top:1px solid #1a1a1a; padding-top:1.1rem; padding-bottom:1.1rem; font-size:.8rem; color:#8a8a8a; }
   .af-footer-bottom strong { color:#fff; font-weight:600; }
   .af-bottom-inner { display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
 
@@ -48,8 +48,18 @@
     .af-info .col-md-6:nth-child(even) .af-info-item { border-left:1px solid #1f1f1f; }
     .af-info .col-md-6:nth-child(n+3) .af-info-item { border-top:1px solid #1f1f1f; }
   }
+  .af-footer { overflow:hidden; width:100%; max-width:100vw; }
+  .af-footer *, .af-footer *::before, .af-footer *::after { box-sizing:border-box; }
+  .af-footer p, .af-footer a, .af-footer span { overflow-wrap:anywhere; }
+
   @media (max-width: 767.98px) {
-    .af-footer-main { padding:2.5rem 0 1.5rem; }
+    .af-footer .container { padding-left:16px !important; padding-right:16px !important; max-width:100%; }
+    .af-footer .row { margin-left:-8px; margin-right:-8px; --bs-gutter-x:16px; }
+    .af-footer .row > * { padding-left:8px; padding-right:8px; }
+    .af-footer .af-info .row { margin-left:0; margin-right:0; }
+    .af-footer .af-info .row > * { padding-left:0; padding-right:0; }
+    .af-footer-main { padding-top:2.5rem; padding-bottom:1.5rem; }
+    .af-brand { text-align:left; }
     .af-info .af-info-item { border-left:0 !important; }
     .af-info .col-12 + .col-12 .af-info-item { border-top:1px solid #1f1f1f; }
     .af-footer-bottom { text-align:center; }
