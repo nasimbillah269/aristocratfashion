@@ -1273,7 +1273,7 @@ class CartController extends Controller
             	}
     			
 	    		
-	    		$datas=Country::where('parent_id',$id)->get();
+	    		$datas=Country::where('parent_id',$id)->orderBy('name')->get();
 	    		$geoData = View('geofilter',compact('datas'))->render();
 
 
