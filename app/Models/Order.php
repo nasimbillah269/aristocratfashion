@@ -117,24 +117,29 @@ class Order extends Model
 
 
     public function fullAddress(){
-        
-        $addr ='';
-        
-        if($this->postal_code){
-           $addr .=$this->postal_code;
-        }
-        if($this->districtN){
-           $addr .=', '.$this->districtN->name;
-        }
-        if($this->city_name){
-           $addr .=', '.$this->city_name.' - Japan';
-        }
+
+        $parts = [];
+
         if($this->address){
-          $addr .=', '.$this->address;  
+            $parts[] = trim($this->address);
         }
 
-        return $addr;
-        
+        if($this->cityN){
+            $parts[] = $this->cityN->name;
+        }elseif($this->city_name){
+            $parts[] = $this->city_name;
+        }
+
+        if($this->districtN){
+            $parts[] = $this->districtN->name;
+        }
+
+        if($this->postal_code){
+            $parts[] = $this->postal_code;
+        }
+
+        return implode(', ', array_filter($parts));
+
     }
     
 

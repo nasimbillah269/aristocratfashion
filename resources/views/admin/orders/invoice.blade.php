@@ -160,10 +160,10 @@
                 					<div class="col-1"></div>
                 					<div class="col-7" style="text-align: end;">
                 						<h6>CONTACT INFORMATION:</h6>
-                						<p>{{general()->address_one}}</p>
                 						<p>{{general()->mobile}}</p>
                 						<p>{{general()->email}}</p>
                 						<p>{{general()->website}}</p>
+                						<p>{{general()->address_one}}</p>
                 					</div>
                 				</div>
                 			</div>
@@ -177,8 +177,9 @@
 											<b>Name:</b> {{ $order->name }}<br>
 											<b>Mobile:</b> {{ $order->mobile }}<br>
 										
-											<!--<b>Address:</b> {{ $order->fullAddress() }}-->
-											<b>Address:</b> {{ str_replace('Dhaka District, ', '', $order->fullAddress()) }}, Dhaka District
+											<b>District:</b> {{ $order->districtN ? $order->districtN->name : '' }}<br />
+											<b>City:</b> {{ $order->cityN ? $order->cityN->name : $order->city_name }}<br />
+											<b>Address:</b> {{ $order->address }}
 											
 										</p>
                 					</div>

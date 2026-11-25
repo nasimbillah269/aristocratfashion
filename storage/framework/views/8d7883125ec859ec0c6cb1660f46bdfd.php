@@ -160,10 +160,10 @@
                 					<div class="col-1"></div>
                 					<div class="col-7" style="text-align: end;">
                 						<h6>CONTACT INFORMATION:</h6>
-                						<p><?php echo e(general()->address_one); ?></p>
                 						<p><?php echo e(general()->mobile); ?></p>
                 						<p><?php echo e(general()->email); ?></p>
                 						<p><?php echo e(general()->website); ?></p>
+                						<p><?php echo e(general()->address_one); ?></p>
                 					</div>
                 				</div>
                 			</div>
@@ -177,8 +177,10 @@
 											<b>Name:</b> <?php echo e($order->name); ?><br>
 											<b>Mobile:</b> <?php echo e($order->mobile); ?><br>
 										
-											<!--<b>Address:</b> <?php echo e($order->fullAddress()); ?>-->
-											<b>Address:</b> <?php echo e(str_replace('Dhaka District, ', '', $order->fullAddress())); ?>, Dhaka District
+											<b>District:</b> <?php echo e($order->districtN ? $order->districtN->name : ''); ?><br />
+											<b>City:</b> <?php echo e($order->cityN ? $order->cityN->name : $order->city_name); ?><br />
+											<b>Address:</b> <?php echo e($order->address); ?>
+
 											
 										</p>
                 					</div>

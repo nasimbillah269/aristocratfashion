@@ -158,10 +158,10 @@
                                                 <div class="col-md-7" style="text-align: end;">
                                                     <h6>CONTACT INFORMATION:</h6>
                                                     <p>
-                                                        {{general()->address_one}}<br />
                                                         {{general()->mobile}}<br />
                                                         {{general()->website}}<br />
-                                                        {{general()->email}}
+                                                        {{general()->email}}<br />
+                                                        {{general()->address_one}}
                                                     </p>
                                                 </div>
                                             </div>
@@ -175,7 +175,9 @@
                                                         <b>Order To:</b><br />
                                                         <b>Name:</b> {{ $order->name }}<br />
                                                         <b>Mobile:</b> {{ $order->mobile }}<br />
-                                                        <b>Address:</b> {{ $order->fullAddress() }}
+                                                        <b>District:</b> {{ $order->districtN ? $order->districtN->name : '' }}<br />
+                                                        <b>City:</b> {{ $order->cityN ? $order->cityN->name : $order->city_name }}<br />
+                                                        <b>Address:</b> {{ $order->address }}
                                                     </p>
                                                 </div>
                                                 <div class="col-md-3"></div>
